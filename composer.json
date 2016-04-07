@@ -1,0 +1,8 @@
+{
+  "name": "Huskee/Bundle",
+  "autoload": {
+    "psr-4" : {
+      "Huskee\\Bundle" : "src"
+    }
+  }
+}
