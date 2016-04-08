@@ -1,8 +1,24 @@
 {
   "name": "Huskee/Bundle",
+  "description": "A collection of common tools",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Luigi Meclea",
+      "email": "luigimeclea@gmail.com"
+    },
+    {
+      "name": "Alexandru Balan",
+      "email": "shob@awsm.ro"
+    }
+  ],
+  "minimum-stability": "stable",
+  "require": {
+    "php": ">=5.4.0"
+  },
   "autoload": {
     "psr-4" : {
-      "Huskee\\Bundle" : "src"
+      "Huskee\\Bundle" : "src/Bundle"
     }
   }
 }
