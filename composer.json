@@ -2,6 +2,7 @@
   "name": "Huskee/Bundle",
   "description": "A collection of common tools",
   "license": "MIT",
+  "version": "1.0.0",
   "authors": [
     {
       "name": "Luigi Meclea",
