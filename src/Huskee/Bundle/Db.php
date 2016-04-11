@@ -5,7 +5,6 @@ class Db
 	private $_dbh;
 	private $_queries = array();
 	private $_results = array();
-	private $_errors = array();
 
 	function __construct(string $host, string $user, string $password, string $dbName)
 	{
