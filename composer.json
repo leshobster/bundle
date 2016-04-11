@@ -13,6 +13,7 @@
       "email": "shob@awsm.ro"
     }
   ],
+  "minimum-stability": "dev",
   "require": {
     "php": ">=5.4.0"
   },
