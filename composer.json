@@ -13,14 +13,14 @@
       "email": "shob@awsm.ro"
     }
   ],
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "require": {
     "php": ">=5.4.0"
   },
   "require-dev": {},
   "autoload": {
     "psr-4" : {
-      "Huskee\\Bundle" : "src/Bundle"
+      "Huskee\\Bundle\\" : "src/Bundle"
     }
   }
 }
