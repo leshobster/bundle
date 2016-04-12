@@ -20,7 +20,7 @@ class Db
 	public function connect($dbName)
 	{
 		if (!mysqli_select_db($this->_dbh, $dbName))
-			die('db connect [2]');
+			$this->_error(sprintf('Can\'t connect to: %s', $dbName));
 	}
 
     public function escape($string, $escapeLike = true)
