@@ -219,6 +219,6 @@ class Db
 
     private function _error($details)
     {
-        throw new BundleException ($details, 503);
+        throw new \Exception ($details, 503);
     }
 }
