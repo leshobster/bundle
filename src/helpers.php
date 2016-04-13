@@ -2,6 +2,12 @@
 function dump($a){
     echo '<pre>';print_r($a);echo '</pre>';
 }
+function ip(){
+    foreach (array('HTTP_X_FORWARDED_FOR', 'HTTP_CF_CONNECTING_IP', 'REMOTE_ADDR') as $value)
+        if (isset($_SERVER[$value]))
+            return $_SERVER[$value];
+    return 0;
+}
 function sysError(\Huskee\Bundle\Db $db, array $params = []){
     $description = $params['info'] ?? $params['info'] . PHP_EOL . PHP_EOL . " --- " . PHP_EOL . PHP_EOL;
     $debug = debug_backtrace();
@@ -18,11 +24,11 @@ function sysError(\Huskee\Bundle\Db $db, array $params = []){
 
     $db->insert('sys_error', array(
         'uri' => $params['path'] ?? 'na',
-        'post' => $params['post'] ?? 'na',
-        'get' => $params['get'] ?? 'na',
+        'post' => !empty($_POST) ? json_encode($_POST) : '',
+        'get' => !empty($_GET) ? json_encode($_GET) : '',
         'description' => $description,
         'date' => time(),
-        'ip' => $params['ip'] ?? 'na',
+        'ip' => ip(),
         'uid' => $params['uid'] ?? 0,
         'level' => $params['level'] ?? E_ERROR
     ));
