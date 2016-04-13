@@ -12,7 +12,7 @@ class Db
             $this->_error('Invalid init');
 
 		if (!($this->_dbh = mysqli_connect($host, $user, $password)))
-			die('db connect [1]');
+			$this->_error('Can\'t connect to the database server');
 		$this->connect($dbName);
 		mysqli_set_charset($this->_dbh, 'utf8');
 	}
@@ -20,7 +20,7 @@ class Db
 	public function connect($dbName)
 	{
 		if (!mysqli_select_db($this->_dbh, $dbName))
-			$this->_error(sprintf('Can\'t connect to: %s', $dbName));
+			$this->_error(sprintf('Can\'t connect to the specified database', $dbName));
 	}
 
     public function escape($string, $escapeLike = true)
