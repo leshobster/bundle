@@ -57,7 +57,7 @@ class Db
         } else
             $where = '';
 
-		$limit = explode(',', $limit);
+		$limit = explode(',', (string) $limit);
 		if (isset($limit[1])) {
 			$offset = $limit[0];
 			$count = $limit[1] + 0;
