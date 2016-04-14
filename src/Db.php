@@ -29,7 +29,7 @@ class Db
         if ($escapeLike)
             $string = str_replace(array("%"), array("\\%"), $string);
 
-        $string = mb_convert_encoding($string, 'UTF-8', 'UTF-8');
+        $string = mb_convert_encoding((string) $string, 'UTF-8', 'UTF-8');
         return mysqli_real_escape_string($this->_dbh, $string);
     }
 
