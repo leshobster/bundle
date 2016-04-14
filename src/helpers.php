@@ -1,14 +1,15 @@
 <?php
-function dump($a){
+declare(strict_types = 1);
+function dump($a) {
     echo '<pre>';print_r($a);echo '</pre>';
 }
-function ip(){
+function ip() : string {
     foreach (array('HTTP_X_FORWARDED_FOR', 'HTTP_CF_CONNECTING_IP', 'REMOTE_ADDR') as $value)
         if (isset($_SERVER[$value]))
             return $_SERVER[$value];
-    return 0;
+    return '0';
 }
-function sysError(\Huskee\Bundle\Db $db, array $params = []){
+function sysError(\Huskee\Bundle\Db $db, array $params = []) {
     $description = $params['info'] ?? $params['info'] . PHP_EOL . PHP_EOL . " --- " . PHP_EOL . PHP_EOL;
     $debug = debug_backtrace();
 

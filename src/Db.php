@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace Huskee\Bundle;
 class Db
 {
@@ -9,21 +10,21 @@ class Db
 	function __construct(string $host, string $user, string $password, string $dbName)
 	{
         if (!$host || !$user || !$password || !$dbName)
-            $this->_error('Invalid init');
+            $this->_error('Invalid init', 503);
 
 		if (!($this->_dbh = mysqli_connect($host, $user, $password)))
-			$this->_error('Can\'t connect to the database server');
+			$this->_error('Can\'t connect to the database server', 503);
 		$this->connect($dbName);
 		mysqli_set_charset($this->_dbh, 'utf8');
 	}
 
-	public function connect($dbName)
+	public function connect(string $dbName)
 	{
 		if (!mysqli_select_db($this->_dbh, $dbName))
-			$this->_error(sprintf('Can\'t connect to the specified database', $dbName));
+			$this->_error(sprintf('Can\'t connect to the specified database', $dbName), 503);
 	}
 
-    public function escape($string, $escapeLike = true)
+    public function escape(string $string, bool $escapeLike = true)
     {
         if ($escapeLike)
             $string = str_replace(array("%"), array("\\%"), $string);
@@ -32,7 +33,7 @@ class Db
         return mysqli_real_escape_string($this->_dbh, $string);
     }
 
-	public function select($fields, $from, $whereArray, $limit = 1, $join = '', $orderBy = '')
+	public function select(string $fields, string $from, array $whereArray, int $limit = 1, string $join = '', string $orderBy = '')
 	{
         if (is_array($whereArray) && $whereArray) {
             $where = array();
@@ -69,26 +70,26 @@ class Db
 		$this->_query("SELECT $fields FROM $from $join $where" . ($orderBy ? " ORDER BY $orderBy" : '') . ($count != 0 ? " LIMIT $offset,$count"  : ''), $count == 0 || $count > 1 ? true : false);
 	}
 
-	public function insert($table, $fieldsAndValuesArray, $onDuplicateKeyArray = array())
+	public function insert(string $table, array $fieldsAndValuesArray, array $onDuplicateKeyArray = array())
 	{
 		$this->_query($this->prepare('insert', $table, $fieldsAndValuesArray, array(), $onDuplicateKeyArray));
 		array_pop($this->_queries);
 		return mysqli_insert_id($this->_dbh);
 	}
 
-	public function update($table, $fieldsAndValuesArray, $whereArray)
+	public function update(string $table, array $fieldsAndValuesArray, array $whereArray)
 	{
 		$this->_query($this->prepare('update', $table, $fieldsAndValuesArray, $whereArray));
 		array_pop($this->_queries);
 	}
 
-	public function delete($table, $whereArray)
+	public function delete(string $table, array $whereArray)
 	{
 		$this->_query($this->prepare('delete', $table, array(), $whereArray));
 		array_pop($this->_queries);
 	}
 
-	public function prepare($operation, $table, $fieldsAndValuesArray, $whereArray = array(), $onDuplicateKeyArray = array())
+	public function prepare(string $operation, string $table, array $fieldsAndValuesArray, array $whereArray = array(), array $onDuplicateKeyArray = array()) : string
 	{
 		$sql = "$operation ";
 		switch ($operation) {
@@ -113,7 +114,7 @@ class Db
 			break;
 
 			default:
-				$this->_error('Invalid operation');
+				$this->_error('Invalid operation', 501);
 		}
 
 		$this->_queries[] = $sql;
@@ -130,7 +131,7 @@ class Db
 		return true;
 	}
 
-	public function getResults($key = '')
+	public function getResults(string $key = '')
 	{
 		$return = $this->_results;
 		$this->_results = array();
@@ -141,21 +142,21 @@ class Db
 		return $return;
 	}
 
-	public function query($query, $multi=false)
+	public function query(string $query, bool $multi = false)
 	{
 		$this->_query($query, $multi);
 	}
 
-	private function _prepareFields($fieldsAndValuesArray)
+	private function _prepareFields(array $fieldsAndValuesArray) : array
 	{
 		if (!is_array($fieldsAndValuesArray))
-            $this->_error('Invalid parameters');
+            $this->_error('Invalid parameters', 500);
 
 		$return = array();
 
 		foreach ($fieldsAndValuesArray as $field => $value) {
 			if (!$field)
-                $this->_error('Invalid field name');
+                $this->_error('Invalid field name', 500);
 
 			$sql = '';
 			$operation = '=';
@@ -183,7 +184,7 @@ class Db
                 } elseif (in_array(strtolower($operation), array('in', 'not in', 'if'), true)) {
 					$val = str_replace("\\'", "'", $val);
                     if (strpos($val, "\\") !== false)
-                        $this->_error('Something went wrong');
+                        $this->_error('Something went wrong', 501);
                     $sql .=  "($val)";
 				} else
                     $sql .= "'$val'";
@@ -195,17 +196,17 @@ class Db
 		return $return;
 	}
 
-	private function _query($query, $multi = false)
+	private function _query(string $query, bool $multi = false)
 	{
 		$result = mysqli_query($this->_dbh, $query);
 		if ($result === false) {
-            $this->_error('Invalid query: ' . $query);
+            $this->_error('Invalid query: ' . $query, 500);
 			exit;
 		}
 		is_object($result) ? $this->_setResults($result, $multi) : $this->_results = mysqli_affected_rows($this->_dbh);
 	}
 
-	private function _setResults($result, $multi)
+	private function _setResults(\mysqli $result, bool $multi)
 	{
 		$this->_results = array();
 		$result->data_seek(0);
@@ -217,8 +218,8 @@ class Db
 			$this->_results = $result->fetch_assoc();
 	}
 
-    private function _error($details)
+    private function _error(string $details, int $code)
     {
-        throw new \Exception ($details, 503);
+        throw new \Exception ($details, $code);
     }
 }
