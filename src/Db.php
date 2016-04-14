@@ -33,7 +33,7 @@ class Db
         return mysqli_real_escape_string($this->_dbh, $string);
     }
 
-	public function select(string $fields, string $from, array $whereArray, int $limit = 1, string $join = '', string $orderBy = '')
+	public function select(string $fields, string $from, array $whereArray, string $limit = '1', string $join = '', string $orderBy = '')
 	{
         if (is_array($whereArray) && $whereArray) {
             $where = array();
@@ -57,7 +57,7 @@ class Db
         } else
             $where = '';
 
-		$limit = explode(',', (string) $limit);
+		$limit = explode(',', $limit);
 		if (isset($limit[1])) {
 			$offset = $limit[0];
 			$count = $limit[1] + 0;
