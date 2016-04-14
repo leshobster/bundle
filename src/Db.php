@@ -24,7 +24,7 @@ class Db
 			$this->_error(sprintf('Can\'t connect to the specified database', $dbName), 503);
 	}
 
-    public function escape(string $string, bool $escapeLike = true)
+    public function escape($string, bool $escapeLike = true)
     {
         if ($escapeLike)
             $string = str_replace(array("%"), array("\\%"), $string);
