@@ -10,9 +10,8 @@ function ip() : string {
     return '0';
 }
 function sysError($db, $logger = null, array $params = []) {
-    $description = isset($params['info']) ? $params['info'] . PHP_EOL . PHP_EOL . " --- " . PHP_EOL . PHP_EOL : '';
     $debug = debug_backtrace();
-
+    $description = '';
     foreach ($debug as $key => $value) {
         $array = array();
         $array[0] = isset($value['line']) ? $value['line'] : 0;
@@ -32,8 +31,10 @@ function sysError($db, $logger = null, array $params = []) {
         'uid' => $params['uid'] ?? 0,
         'level' => $params['level'] ?? E_ERROR
     ];
-    if (is_object($db) && $db instanceof \Huskee\Bundle\Db)
+    if (is_object($db) && $db instanceof \Huskee\Bundle\Db) {
+        if (isset($params['info']))
+            $log['description'] = $params['info'] . PHP_EOL . PHP_EOL . " --- " . PHP_EOL . PHP_EOL . $log['description'];
         $db->insert('sys_error', $log);
-    else if (is_object($logger) && method_exists($logger, 'addError'))
-        $logger->addError($log);
+    } else if (is_object($logger) && method_exists($logger, 'addError'))
+        $logger->addError(isset($params['info']) ?? '', $log);
 }
