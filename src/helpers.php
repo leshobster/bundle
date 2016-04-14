@@ -36,5 +36,5 @@ function sysError($db, $logger = null, array $params = []) {
             $log['description'] = $params['info'] . PHP_EOL . PHP_EOL . " --- " . PHP_EOL . PHP_EOL . $log['description'];
         $db->insert('sys_error', $log);
     } else if (is_object($logger) && method_exists($logger, 'addError'))
-        $logger->addError(isset($params['info']) ?? '', $log);
+        $logger->error(isset($params['info']) ?? '', $log);
 }
