@@ -206,7 +206,7 @@ class Db
 		is_object($result) ? $this->_setResults($result, $multi) : $this->_results = mysqli_affected_rows($this->_dbh);
 	}
 
-	private function _setResults(\mysqli $result, bool $multi)
+	private function _setResults(\mysqli_result $result, bool $multi)
 	{
 		$this->_results = array();
 		$result->data_seek(0);
