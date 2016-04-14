@@ -172,7 +172,9 @@ class Db
 					$sql = "$field = $field " . substr($value[0], 0 ,-1) . " $val";
 				$operation = $value[0];
 			}
-
+            
+            $operation = (string) $operation;
+            
 			if (!$sql) {
 				$sql = $operation === 'if' ? "$field = $operation " : "$field $operation ";
                 if (in_array(strtolower($operation), array('like', 'not like'), true)) {

@@ -10,7 +10,7 @@ function ip() : string {
     return '0';
 }
 function sysError(\Huskee\Bundle\Db $db, array $params = []) {
-    $description = $params['info'] ?? $params['info'] . PHP_EOL . PHP_EOL . " --- " . PHP_EOL . PHP_EOL;
+    $description = isset($params['info']) ? $params['info'] . PHP_EOL . PHP_EOL . " --- " . PHP_EOL . PHP_EOL : '';
     $debug = debug_backtrace();
 
     foreach ($debug as $key => $value) {
