@@ -2,7 +2,7 @@
   "name": "huskee/bundle",
   "description": "A collection of common tools",
   "license": "MIT",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "authors": [
     {
       "name": "Luigi Meclea",
@@ -15,7 +15,8 @@
   ],
   "minimum-stability": "stable",
   "require": {
-    "php": ">=7.0.0"
+    "php": ">=7.0.0",
+    "ext-mbstring": "*"
   },
   "require-dev": {
     "php": ">=7.0.0"
