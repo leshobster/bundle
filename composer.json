@@ -21,7 +21,7 @@
   "suggest": {
     "monolog/monolog": "Allow logging of events",
     "pimple/pimple": "Container handler",
-    "container-interop/container-interop": "Assure container interoperability",
+    "container-interop/container-interop": "Assure container interoperability"
   },
   "autoload": {
     "psr-4" : {
