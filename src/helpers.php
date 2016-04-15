@@ -38,3 +38,25 @@ function sysError($db, $logger = null, array $params = []) {
     } else if (is_object($logger) && method_exists($logger, 'addError'))
         $logger->error($params['info'] ?? '', $log);
 }
+function config() {
+    static $config;
+    $args = func_get_args();
+
+    if (!$args)
+        throw new Exception('No arguments passed', 400);
+
+    if (!$config) {
+        if (!is_array($args[0]))
+            throw new Exception('Invalid arguments during config read', 400);
+        return $config = $args[0];
+    }
+
+    foreach ($args as $value){
+        $config = &$config[$value];
+
+        if (!isset($config))
+            throw new Exception('No config value for arguments: ' . implode('-> ', $args), 400);
+    }
+
+    return $config;
+}
