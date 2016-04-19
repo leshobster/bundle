@@ -1,5 +1,35 @@
 <?php
 declare(strict_types = 1);
+function checkId($value) {
+    if (!is_numeric($value) || $value < 1)
+        return false;
+    $value = $value + 0;
+    if (!is_int($value))
+        return false;
+    return $value;
+}
+function config() {
+    static $config;
+    $args = func_get_args();
+
+    if (!$args)
+        throw new Exception('No arguments passed', 400);
+
+    if (!$config) {
+        if (!is_array($args[0]))
+            throw new Exception('Invalid arguments during config read', 400);
+        return $config = $args[0];
+    }
+
+    foreach ($args as $value){
+        $config = &$config[$value];
+
+        if (!isset($config))
+            throw new Exception('No config value for arguments: ' . implode('-> ', $args), 400);
+    }
+
+    return $config;
+}
 function dump($a) {
     echo '<pre>';print_r($a);echo '</pre>';
 }
@@ -35,28 +65,11 @@ function sysError($db, $logger = null, array $params = []) {
         if (isset($params['info']))
             $log['description'] = $params['info'] . PHP_EOL . PHP_EOL . " --- " . PHP_EOL . PHP_EOL . $log['description'];
         $db->insert('sys_error', $log);
-    } else if (is_object($logger) && method_exists($logger, 'addError'))
+    } else if (is_object($logger) && method_exists($logger, 'error'))
         $logger->error($params['info'] ?? '', $log);
 }
-function config() {
-    static $config;
-    $args = func_get_args();
-
-    if (!$args)
-        throw new Exception('No arguments passed', 400);
-
-    if (!$config) {
-        if (!is_array($args[0]))
-            throw new Exception('Invalid arguments during config read', 400);
-        return $config = $args[0];
-    }
-
-    foreach ($args as $value){
-        $config = &$config[$value];
-
-        if (!isset($config))
-            throw new Exception('No config value for arguments: ' . implode('-> ', $args), 400);
-    }
-
-    return $config;
+function urlId(string $url, string $separator = '-') {
+    $id = explode($separator, $url);
+    $id = array_pop($id);
+    return checkId($id);
 }
